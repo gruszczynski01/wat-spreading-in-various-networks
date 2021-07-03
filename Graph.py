@@ -21,10 +21,10 @@ class Graph:
         time_text.set_text("Infected {}".format(infected_number))
 
     def initializeTexts(self, ax):
-        self.infectedText = ax.text(-1, -0.8, '')
-        self.recoveredText = ax.text(-1, -0.9, '')
-        self.vaccinatedText = ax.text(-1, -1.0, '')
-        self.deathsText = ax.text(-1, -1.1, '')
+        self.infectedText = ax.text(-1, -0.8, '', color='red')
+        self.recoveredText = ax.text(-1, -0.9, '', color='green')
+        self.vaccinatedText = ax.text(-1, -1.0, '', color='blue')
+        self.deathsText = ax.text(-1, -1.1, '', color='black')
 
     def updateText(self, infected_number, recovered_number, vaccinated_number, deaths_number):
         self.infectedText.set_text("Infected {}".format(infected_number))

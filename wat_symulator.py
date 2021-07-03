@@ -4,7 +4,7 @@ import networkx as nx
 from networkx.generators.random_graphs import erdos_renyi_graph
 from networkx.generators.random_graphs import watts_strogatz_graph
 from matplotlib import animation
-from Graph import Graph
+from Plot import Plot
 
 SUSCEPTIBLE = []
 INFECTED = []
@@ -14,9 +14,9 @@ VACINNATED = []
 
 INITIAL_INFECTED = 0.1
 PROBABILITY_OF_INFECTION = 0.2
-DEATH_PROBABILITY = 0.2
+DEATH_PROBABILITY = 0.03
 
-STEPS_TO_RECOVERED = 3
+STEPS_TO_RECOVERED = 7
 
 VACINNATED_PER_DAY = 1
 
@@ -28,7 +28,7 @@ CHOOSEN_VACINNATED_STRATEGY = NODE_DEGREE_VACINNATED_STRATEGY
 
 recovery = []
 
-NODE = 150
+NODE = 200
 
 
 def move_to_susceptible(node):
@@ -95,6 +95,7 @@ def decision(probability):
 
 
 def sim_step(frame, layout, ax, day):
+    day = DAY
     if CHOOSEN_VACINNATED_STRATEGY == RANDOM_VACINNATED_STRATEGY:
         VACINNATED_THAT_DAY = VACINNATED_PER_DAY
         if VACINNATED_PER_DAY > len(SUSCEPTIBLE):
@@ -110,18 +111,18 @@ def sim_step(frame, layout, ax, day):
         VACINNATED_THAT_DAY = VACINNATED_PER_DAY
         if VACINNATED_PER_DAY > len(SUSCEPTIBLE):
             VACINNATED_THAT_DAY = len(SUSCEPTIBLE)
+        if len(SUSCEPTIBLE) > 0:
+            for i in range(0, VACINNATED_PER_DAY):
+                node_to_vacinnated = ""
+                while node_to_vacinnated == "":
+                    node_to_vacinnated_candidate = verex_sorted_by_degree.pop(0)[0]
+                    if node_to_vacinnated_candidate in SUSCEPTIBLE:
+                        node_to_vacinnated = node_to_vacinnated_candidate
 
-        for i in range(0, VACINNATED_PER_DAY):
-            node_to_vacinnated = ""
-            while node_to_vacinnated == "":
-                node_to_vacinnated_candidate = verex_sorted_by_degree.pop(0)[0]
-                if node_to_vacinnated_candidate in SUSCEPTIBLE:
-                    node_to_vacinnated = node_to_vacinnated_candidate
-
-            print(node_to_vacinnated)
-            remove_from_susceptible(node_to_vacinnated)
-            move_to_vacinnated(node_to_vacinnated)
-            print("Node: " + str(node_to_vacinnated) + " has been vacinnated")
+                print(node_to_vacinnated)
+                remove_from_susceptible(node_to_vacinnated)
+                move_to_vacinnated(node_to_vacinnated)
+                print("Node: " + str(node_to_vacinnated) + " has been vacinnated")
 
     # infected undirectional
     for edge in G.edges():
@@ -166,8 +167,8 @@ def sim_step(frame, layout, ax, day):
 def update_layout(layout, ax):
     global DAY
     color_map = update_colors()
-    graph.update_layout(layout, ax, DAY, color_map)
-    graph.updateText(len(INFECTED), len(RECOVERED), len(VACINNATED), len(DEATH))
+    plot.update_layout(layout, ax, DAY, color_map)
+    plot.updateText(len(INFECTED), len(RECOVERED), len(VACINNATED), len(DEATH))
     DAY += 1
 
 
@@ -187,7 +188,7 @@ def simple_animation():
 
     layout = nx.circular_layout(G)
     nx.draw_networkx(G, layout)
-    graph.initializeTexts(ax)
+    plot.initializeTexts(ax)
 
     global anim
     anim = animation.FuncAnimation(fig, sim_step, frames=10, fargs=(layout, ax, 0), interval=1000)
@@ -212,7 +213,7 @@ for test in range(0, 1):
 
     # G = watts_strogatz_graph(NODE, 5, 0.2)
     G = nx.scale_free_graph(NODE)
-    graph = Graph(G)
+    plot = Plot(G)
 
     verex_sorted_by_degree = sorted(G.degree, key=lambda x: x[1], reverse=True)
     print("verex_sorted_by_degree:")

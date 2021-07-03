@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from matplotlib import animation
 
 
-class Graph:
+class Plot:
     def __init__(self, G):
         self.G = G
         self.infectedText = None

@@ -28,7 +28,7 @@ CHOOSEN_VACINNATED_STRATEGY = NODE_DEGREE_VACINNATED_STRATEGY
 
 recovery = []
 
-NODE = 200
+NODE = 70
 
 
 def move_to_susceptible(node):
@@ -211,7 +211,7 @@ for test in range(0, 1):
     RECOVERED = []
     DEATH = []
 
-    # G = watts_strogatz_graph(NODE, 5, 0.2)
+    # G = watts_strogatz_graph(NODE, 5, 0.2) #small world
     G = nx.scale_free_graph(NODE)
     plot = Plot(G)
 
